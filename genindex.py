@@ -238,7 +238,7 @@ def create_html_file(filename_with_path, post_conf_files):
         html.append('<a href="%s/index.html"><img src="%s/index.jpg" alt="%s" height=300 width=400/></a>' %
             (post_out_dir, post_out_dir, post_out_dir.replace(r'/',' ')))
 
-        html.append('<p><span class="date">%s</span>, <a href="%s/index.html">%d pics</a>%s</p>' % (j['date'],
+        html.append('<p>%s, <span class="date">%s</span>, <a href="%s/index.html">%d pics</a>%s</p>' % (j['title'],j['date'],
              post_out_dir,
              num_images,
              movie_info))
