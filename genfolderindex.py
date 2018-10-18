@@ -28,42 +28,44 @@ def createImagesAndImageHtml(inputpath, inputjson, outputpath):
     imageshtml = ''
     for image in inputjson['images']:
         
+        def cap_dimensions_by_height(dimensions, y_cap):
+            if dimensions[1] > y_cap:
+                return (int(dimensions[0]/dimensions[1]*y_cap), y_cap)
+            return dimensions
+
         im = Image.open(os.path.join(inputpath, 'images', image['image']))
         width, height = im.size
         if width >= height:
-            # Landscape or panoramic. If it's panoramic we cap the
-            # height to a 4x3 picture.
-            assert(width >= 1600)
-            assert(height >= 1200)
-            bigheight = 1200
-            bigwidth = int(width/height*1200)
-            medheight = 768
-            medwidth = int(width/height*768)
-            lowheight = 180
-            lowwidth = int(width/height*180)
+
+            # Landscape. Cap each image to a given height, keep the aspect ratio.
+            photo_dimensions_big = cap_dimensions_by_height(im.size, 1200)
+            photo_dimensions_med = cap_dimensions_by_height(im.size, 768)
+            photo_dimensions_low = cap_dimensions_by_height(im.size, 180)
 
         else:
             # Portait.
-            assert(width >= 1200)
-            assert(height >= 1600)
-            bigheight = 1600
-            bigwidth = 1200
-            medheight = 1024
-            medwidth = 768
-            lowheight = 240
-            lowwidth = 180
+            photo_dimensions_big = cap_dimensions_by_height(im.size, 1600)
+            photo_dimensions_med = cap_dimensions_by_height(im.size, 1024)
+            photo_dimensions_low = cap_dimensions_by_height(im.size, 240)
 
         bigname = image['image'].replace('.jpg', '_b.jpg')
         medname = image['image'].replace('.jpg', '_m.jpg')
         lowname = image['image'].replace('.jpg', '_l.jpg')
-        im.resize((bigwidth, bigheight),Image.BICUBIC).save(os.path.join(outputpath, bigname))
-        im.resize((medwidth, medheight),Image.BICUBIC).save(os.path.join(outputpath, medname))
-        im.resize((lowwidth, lowheight),Image.BICUBIC).save(os.path.join(outputpath, lowname))
+        im.resize(photo_dimensions_big,Image.BICUBIC).save(os.path.join(outputpath, bigname))
+        im.resize(photo_dimensions_med,Image.BICUBIC).save(os.path.join(outputpath, medname))
+        im.resize(photo_dimensions_low,Image.BICUBIC).save(os.path.join(outputpath, lowname))
 
         imageshtml += '''<a href="{}" data-size="{}x{}" data-med="{}" data-med-size="{}x{}" class="demo-gallery__img--main">
          <img src="{}" alt=""/>
          <figure>{}</figure>
-        </a>'''.format(bigname, bigwidth, bigheight, medname, medwidth, medheight, lowname, image['caption'])
+        </a>'''.format(bigname,
+                photo_dimensions_big[0],
+                photo_dimensions_big[1],
+                medname,
+                photo_dimensions_med[0],
+                photo_dimensions_med[1],
+                lowname,
+                image['caption'])
 
         # Create the index.jpg file for the overall posting.
         if image['image'] == inputjson['index image']:

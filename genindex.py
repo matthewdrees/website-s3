@@ -2,6 +2,7 @@ import argparse
 import logging
 import json
 import os
+import re
 import sys
 import shutil
 import subprocess
@@ -223,10 +224,12 @@ def create_html_file(filename_with_path, post_conf_files):
         if os.path.exists(mp4RelFile):
 
             # Get movie info
-            out = subprocess.check_output(["ffmpeg2theora",
-                                           "--info",
-                                           mp4RelFile], universal_newlines=True)
-            duration = int(json.JSONDecoder().decode(out)["duration"])
+            out = subprocess.check_output(
+                "ffprobe -i %s -show_format -v quiet" % mp4RelFile,
+                shell=True, universal_newlines=True)
+            mo = re.search(r'duration=(\d+)\.', out)
+            duration = int(mo.groups()[0])
+
             movie_info = ', <a href="%s/movie.html">%d:%02d video</a>' % (post_out_dir,
                     duration // 60,
                     duration % 60) 

@@ -5,10 +5,10 @@
 # regenerate. TODO: Update script to use old content. This involves
 # working with the older, smaller images.
 #OLD_CONTENT_FOLDERS := $(wildcard content/2014/*) \
-#					   $(wildcard content/2015/*) \
-#					   $(wildcard content/2016/*) \
+#                       $(wildcard content/2015/*) \
+#                       $(wildcard content/2016/*) \
 
-CONTENT_FOLDERS := $(wildcard content/2017/*)
+CONTENT_FOLDERS := $(wildcard content/2018/*)
 
 OUT_FOLDERS := $(patsubst content/%,out/%,$(CONTENT_FOLDERS))
 
@@ -29,7 +29,7 @@ out/%.mp4 : content/%.mp4
 	python genmovie.py -j $< -m $@
 
 out/%.ogv : content/%.mp4
-	ffmpeg2theora -o $@ -p padma $<
+	ffmpeg -i $< -c:v libtheora -q:v 7 -c:a libvorbis -q:a 4 $@
  
 out/%/index.html : content/%/a.json
 	mkdir -p $(dir $@)
