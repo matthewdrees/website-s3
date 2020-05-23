@@ -36,7 +36,7 @@ if __name__ == "__main__":
     jpg_filenames = os.listdir(os.path.join(path, 'images'))
     jpg_filenames = natsorted(jpg_filenames)
     new_jpg_filenames = []
-    for jpeg_filename in filter(lambda f: os.path.splitext(f)[1] == '.jpg', jpg_filenames):
+    for jpeg_filename in jpg_filenames:
         new_jpg_filename = jpeg_filename.replace(' - ', '_')
         shutil.move(os.path.join(path, 'images', jpeg_filename),
                     os.path.join(path, 'images', new_jpg_filename))

@@ -48,9 +48,10 @@ def createImagesAndImageHtml(inputpath, inputjson, outputpath):
             photo_dimensions_med = cap_dimensions_by_height(im.size, 1024)
             photo_dimensions_low = cap_dimensions_by_height(im.size, 240)
 
-        bigname = image['image'].replace('.jpg', '_b.jpg')
-        medname = image['image'].replace('.jpg', '_m.jpg')
-        lowname = image['image'].replace('.jpg', '_l.jpg')
+        image_basename = os.path.basename(image['image'])
+        bigname = image_basename + '_b.jpg'
+        medname = image_basename + '_m.jpg'
+        lowname = image_basename + '_l.jpg'
         im.resize(photo_dimensions_big,Image.BICUBIC).save(os.path.join(outputpath, bigname))
         im.resize(photo_dimensions_med,Image.BICUBIC).save(os.path.join(outputpath, medname))
         im.resize(photo_dimensions_low,Image.BICUBIC).save(os.path.join(outputpath, lowname))
