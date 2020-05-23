@@ -18,14 +18,14 @@ def getHeaders(key_name):
         headers["Content-Type"] = "application/ogg"
 
 def sync(config, dry_run):
-    
+
     conn = S3Connection(config['access_key_id'],
                         config['aws_secret_access_key'],
                         calling_format=OrdinaryCallingFormat())
     b = conn.get_bucket(config['bucket_name'])
 
     logging.info("Getting key timestamps...")
-    
+
     s3KeyDts = {}
 
     # key_name: e.g. 2013/sanjuanislands/index.html
@@ -34,27 +34,27 @@ def sync(config, dry_run):
             s3KeyDts[key.name] = utils.parse_ts(key.last_modified)
 
     logging.info("Walking files...")
-    
+
     os.chdir("out")
     for path, _, filenames in os.walk("."):
         path = path[2:]
         for filename in filenames:
-    
+
             if filename[0] == ".":
                 continue
-            
+
             key_name = os.path.join(path, filename)
-            
+
             if key_name in s3KeyDts:
-                
+
                 fileDt = datetime.datetime.utcfromtimestamp(os.path.getmtime(key_name))
 
                 if fileDt <= s3KeyDts[key_name]:
-                    
+
                     logging.debug("'%s' - File up to date. Skipping. %s <= %s" % (key_name, str(fileDt), str(s3KeyDts[key_name])))
-                    
+
                 else:
-                        
+
                     logging.info("'%s' - File out of date. Replacing. %s > %s" % (key_name, str(fileDt), str(s3KeyDts[key_name])))
                     if not dry_run:
                         key = Key(b, key_name)
@@ -67,11 +67,11 @@ def sync(config, dry_run):
                                                      md5=None,
                                                      reduced_redundancy=True,
                                                      encrypt_key=False)
-                
+
                 del s3KeyDts[key_name]
-            
+
             else:
-                
+
                 logging.info("'%s' - new file! Adding." % key_name)
                 if not dry_run:
                     key = Key(b, key_name)
@@ -84,10 +84,10 @@ def sync(config, dry_run):
                                                  md5=None,
                                                  reduced_redundancy=True,
                                                  encrypt_key=False)
-                
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    
+
     parser = argparse.ArgumentParser(description='sync s3 bucket with contents from "out/" folder.')
     parser.add_argument('--config-file', dest='config_file', default='config.json',
             help='config file for s3 connection information')
@@ -100,4 +100,4 @@ if __name__ == '__main__':
         config = json.load(f)
 
     sync(config, args.dry_run)
-    
+

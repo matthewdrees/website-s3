@@ -5,7 +5,7 @@ import sys
 from natsort import natsorted
 
 if __name__ == "__main__":
-    
+
     if len(sys.argv) != 2:
         print('Usage: $ python3 createajson.py content/2016/folder')
         print('This creates a pre-populated a.json file in that folder based on images.')

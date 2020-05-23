@@ -18,16 +18,16 @@ def createImagesAndImageHtml(inputpath, inputjson, outputpath):
     If portrait, the inverse.
 
     If panormaic, cap the y axis to the same as landscape.
-    
+
     So we only have to touch images once, create the html blob and return it
     as a string.
 
     Create the index.jpg file as well.
     '''
-    
+
     imageshtml = ''
     for image in inputjson['images']:
-        
+
         def cap_dimensions_by_height(dimensions, y_cap):
             if dimensions[1] > y_cap:
                 return (int(dimensions[0]/dimensions[1]*y_cap), y_cap)
@@ -391,7 +391,7 @@ def doFolderIndex(inputjson, imageshtml, outputpath):
                 useLargeImages = true;
                   imageSrcWillChange = true;
               }
-                
+
             } else {
               if(useLargeImages) {
                 useLargeImages = false;
@@ -446,7 +446,7 @@ def doFolderIndex(inputjson, imageshtml, outputpath):
   </script>
 </body>
 </html>''' % (inputjson['title'], inputjson['title'], inputjson['blurb'], imageshtml)
-            
+
     indexHtmlRelPath = os.path.join(outputpath, 'index.html')
     logging.info("Creating file %s" % indexHtmlRelPath)
     with open(indexHtmlRelPath, 'w') as f:
