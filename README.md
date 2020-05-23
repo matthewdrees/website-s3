@@ -13,10 +13,9 @@ another terminal, and build/run in this one):
 
     $ docker run --mount type=bind,source=$(pwd),target=/app -i -t website-s3 /bin/sh
 
-Take notice if your images are stacking up:
+If you exited that container and want to reconnect:
 
-    $ docker image ls
+    $ docker ps
+    $ docker exec -it <container name> /bin/sh
 
-... and prune them if necessary:
-
-    $ docker system prune
+I use Docker Desktop to monitor the running docker containers.
