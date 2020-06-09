@@ -10,6 +10,11 @@ from PIL import Image
 def createImagesAndImageHtml(inputpath, inputjson, outputpath):
     '''Creates copies of properly sized images and returns image html.
 
+    :param inputpath: path/to/content
+    :param inputjson: input json from a.json file
+    :param outputpath: path/to/output
+    :return: html of images section
+
     Need to copy 3 types of images from the original:
      - Big: 1600x1200
      - Med: 1024x768
@@ -27,6 +32,7 @@ def createImagesAndImageHtml(inputpath, inputjson, outputpath):
 
     imageshtml = ''
     for image in inputjson['images']:
+        logging.debug(f'processing image {image}')
 
         def cap_dimensions_by_height(dimensions, y_cap):
             if dimensions[1] > y_cap:
@@ -70,7 +76,7 @@ def createImagesAndImageHtml(inputpath, inputjson, outputpath):
 
         # Create the index.jpg file for the overall posting.
         if image['image'] == inputjson['index image']:
-            assert(width*3 == height*4) # Must be 4/3 landscape.
+            assert(width*3 == height*4), "index image must be 4/3 landscape"
             im.resize((400,300),Image.BICUBIC).save(os.path.join(outputpath, 'index.jpg'))
 
     return imageshtml
@@ -452,6 +458,39 @@ def doFolderIndex(inputjson, imageshtml, outputpath):
     with open(indexHtmlRelPath, 'w') as f:
         f.write(html)
 
+def createMovieHtml(inputjson, outputpath):
+    '''Create movie.html for posting.
+
+    Assumes movie name is the same as the outputpath basename, e.g. if outputpath
+    is "out/2020/may" then the movie name will be may.mp4/webm.
+
+    :param inputjson: input a.json
+    :type inputjson: dict
+    :param outputpath: path to output files
+    :type outputpath: str
+    :return None
+    '''
+    movieName = os.path.basename(outputpath)
+    logging.debug(f'movie name is "{movieName}"')
+    title = inputjson['title']
+    html = f"""
+<html>
+<head>
+<title>{title}</title>
+</head>
+<body>
+<video controls>
+  <source src="{movieName}.webm" type="video/webm">
+  <source src="{movieName}.mp4" type="video/mp4">
+  I'm sorry; your browser doesn't support HTML5 video in WebM with VP8 or MP4 with H.264.
+</video>
+</body>
+</html>
+"""
+
+    with open(os.path.join(outputpath, "movie.html"), 'w') as f:
+        f.write(html)
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
@@ -477,3 +516,4 @@ if __name__ == "__main__":
 
     imageshtml = createImagesAndImageHtml(args.inputpath, inputjson, args.outputpath)
     doFolderIndex(inputjson, imageshtml, args.outputpath)
+    createMovieHtml(inputjson, args.outputpath)
