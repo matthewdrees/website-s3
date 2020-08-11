@@ -6,4 +6,4 @@ ADD README.md /app
 
 RUN apk add --no-cache ffmpeg zlib-dev jpeg-dev gcc musl-dev make
 
-RUN pip install natsort pillow boto
+RUN pip install natsort pillow boto scons

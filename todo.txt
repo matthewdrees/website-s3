@@ -1,10 +1,11 @@
-- masonry grid actual grid
 - each photo page works standalone
-- Next/prev/movie links on image page
-- get year pages to work again
-- fix html bugs
-- update masonry
 - update photoswipe
+- fix html bugs
+- masonry grid actual grid
+- nav panel of postings
+- move photoswipe javascript to own file
+- get year pages to work again
+- update masonry
 - process for updating all old postings
 - backfill old postings
 - how to manage content?
