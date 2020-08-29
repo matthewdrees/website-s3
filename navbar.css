@@ -1,0 +1,25 @@
+nav {
+  width: 150px;
+  float: left;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  margin-right: 10px;
+}
+
+section#main{
+  width: 500;
+  float: left;
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+
+li#year {
+    font-weight: bold;
+}
+ul {
+    text-align: left;
+    list-style-type: none;
+    padding: 0;
+}
