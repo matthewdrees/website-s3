@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Matt and Cress</title>
+<link rel="stylesheet" href="navbar.css">
+</head>
+<body>
+<h1>Matt and Cress</h1>
+
+<script>
+function getnavbar() {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+        const body = this.responseXML.body;
+        const navhtml = body.querySelector('nav');
+        console.log(navhtml);
+        const main = document.querySelector('#main');
+        document.body.insertBefore(navhtml, main);
+    }
+    xhr.open("GET", "sidebar.html");
+    xhr.responseType = "document";
+    xhr.send();
+}
+getnavbar();
+</script>
+
+<section id="main">
+    <p>main content in he</p>
+    <p>main content in here</p>
+    <p>main content in here</p>
+    <p>main content in here</p>
+    <p>main content in here</p>
+    <p>main content in here</p>
+    <p>main content in here</p>
+    <p>main content in here</p>
+    <p>main content in here</p>
+    <p>main content in here</p>
+    <p>main content in here</p>
+    <p>main content in here</p>
+</section>
+</body>
+</html>
