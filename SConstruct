@@ -225,6 +225,12 @@ def do_robots_txt():
     Command(target, source, Copy("$TARGET", "$SOURCE"))
 
 
+def do_site_css():
+    source = "site.css"
+    target = os.path.join(outDir, source)
+    Command(target, source, Copy("$TARGET", "$SOURCE"))
+
+
 # List of post folder names (skip lame hidden folders)
 post_folder_names = sorted([f for f in os.listdir(postsDir) if not f.startswith(".")])
 
@@ -240,6 +246,9 @@ for post_folder_name in post_folder_names:
 
 # sidebar.html
 do_sidebar_html(post_folder_names)
+
+# site.css
+do_site_css()
 
 # robots.txt
 do_robots_txt()
