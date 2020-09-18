@@ -43,12 +43,14 @@ class PostInfo:
         self.date: datetime.date(2020,6,20)
         self.name = 'Post Name'
         self.url = "2020/06/20/post-name"
+        self.out_url = "{outDir}/2020/06/20/post-name"
         """
         path_parts = post_folder_name.split(" ", maxsplit=1)
         self.date = datetime.date.fromisoformat(path_parts[0])
         self.name = path_parts[1]
         post_url_name = scrub_filename_for_url(self.name.lower())
-        self.url = f"{outDir}/{self.date.year}/{self.date.month}/{self.date.day}/{post_url_name}"
+        self.url = f"{self.date.year}/{self.date.month}/{self.date.day}/{post_url_name}"
+        self.out_url = f"{outDir}/{self.url}"
         self.moviename = f"{post_url_name}.mp4"
 
 
@@ -75,9 +77,9 @@ def build_post_images(post_in_path, postInfo):
             continue
         postImageUrlNames = PostImageUrlNames(imagename)
         image_in = os.path.join(post_in_path, imagename)
-        little_image_out = f"{postInfo.url}/{postImageUrlNames.little}"
-        medium_image_out = f"{postInfo.url}/{postImageUrlNames.medium}"
-        big_image_out = f"{postInfo.url}/{postImageUrlNames.big}"
+        little_image_out = f"{postInfo.out_url}/{postImageUrlNames.little}"
+        medium_image_out = f"{postInfo.out_url}/{postImageUrlNames.medium}"
+        big_image_out = f"{postInfo.out_url}/{postImageUrlNames.big}"
         # Creating all 3 images in a single convert command is twice as fast as creating each separately.
         env.Command(
             (little_image_out, medium_image_out, big_image_out),
@@ -168,7 +170,7 @@ def write_post_index_html(target, source, env):
 def build_post_index_html(post_in_path, postInfo):
     """Build post index.html."""
 
-    post_index_html_out = f"{postInfo.url}/index.html"
+    post_index_html_out = f"{postInfo.out_url}/index.html"
     source = ["post_template.html"]
 
     # Add all files in post directory as a source dependency
@@ -182,8 +184,45 @@ def build_post_mp4(post_in_path, postInfo):
     """Build post movie file"""
     source = os.path.join(post_in_path, postInfo.moviename)
     if os.path.isfile(source):
-        target = f"{postInfo.url}/{postInfo.moviename}"
+        target = f"{postInfo.out_url}/{postInfo.moviename}"
         env.Command(target, source, "ffmpeg -i $SOURCE -vf scale=-2:416 $TARGET")
+
+
+def build_sidebar_html(target, source, env):
+    """Build sidebar.html"""
+    post_folder_names = [Path(str(s)).parts[-1] for s in source]
+
+    html = ["<nav>", "<ul>"]
+    curYear = 0
+    for post_folder_name in post_folder_names:
+        p = PostInfo(post_folder_name)
+        if p.date.year != curYear:
+            curYear = p.date.year
+            html.append(f'<li id="year">{curYear}</li>')
+        html.append(f'<li><a href="../../../../{p.url}/index.html">{p.name}</a></li>')
+    html.append("</ul>")
+    html.append("</nav>")
+
+    with open(str(target[0]), "w") as f:
+        f.write("\n".join(html))
+
+
+def do_sidebar_html(post_folder_names):
+    """Set up dependencies for sidebar.html
+
+    :param post_folder_names: sorted list of 2020-06-30-post-name folder names.
+    :rtype: None
+    """
+    target = os.path.join(outDir, "sidebar.html")
+    source = [os.path.join(postsDir, p) for p in post_folder_names]
+    env.Command(target, source, build_sidebar_html)
+
+
+def do_robots_txt():
+    """Create robots.txt file."""
+    source = "robots.txt"
+    target = os.path.join(outDir, source)
+    Command(target, source, Copy("$TARGET", "$SOURCE"))
 
 
 # List of post folder names (skip lame hidden folders)
@@ -198,3 +237,9 @@ for post_folder_name in post_folder_names:
     build_post_images(post_in_path, postInfo)
     build_post_index_html(post_in_path, postInfo)
     build_post_mp4(post_in_path, postInfo)
+
+# sidebar.html
+do_sidebar_html(post_folder_names)
+
+# robots.txt
+do_robots_txt()
