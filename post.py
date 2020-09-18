@@ -1,9 +1,14 @@
-'''Code that helps generate postings. Broken out from SConstruct to be testable.'''
+"""Code that helps generate postings. Broken out from SConstruct to be testable."""
 
 from pathlib import Path
 
-def getPostImageDimensions(source_image_dimensions, post_dimensions_portrait_height, post_dimensions_landscape_height):
-    '''Get 'WxH' dimesions for post image based on source_image_dimensions.
+
+def getPostImageDimensions(
+    source_image_dimensions,
+    post_dimensions_portrait_height,
+    post_dimensions_landscape_height,
+):
+    """Get 'WxH' dimesions for post image based on source_image_dimensions.
 
     If source_image_dimension width >= height, photo is landscape, otherwise portrait. Cap image
     height appropriately while keeping aspect ratio. Most images are 4x3 aspect ratio but some
@@ -42,22 +47,23 @@ def getPostImageDimensions(source_image_dimensions, post_dimensions_portrait_hei
     '2647x768'
     >>> getPostImageDimensions('13336x3868', 1600, 1200)
     '4137x1200'
-    '''
-    dimensions = [int(s) for s in source_image_dimensions.split('x')]
-    assert (len(dimensions) == 2)
+    """
+    dimensions = [int(s) for s in source_image_dimensions.split("x")]
+    assert len(dimensions) == 2
     width, height = dimensions
 
     def cap_dimensions_by_height(width, height, y_cap):
         if height <= y_cap:
-            return str(width) + 'x' + str(height)
-        return str(width*y_cap//height) + 'x' + str(y_cap)
+            return str(width) + "x" + str(height)
+        return str(width * y_cap // height) + "x" + str(y_cap)
 
     if width >= height:
         return cap_dimensions_by_height(width, height, post_dimensions_landscape_height)
     return cap_dimensions_by_height(width, height, post_dimensions_portrait_height)
 
+
 def getImageCaptionFromFilename(source_filename):
-    '''Get image caption string from filename.
+    """Get image caption string from filename.
 
     :param filename: filename of source image, with or without path
     :return: caption string
@@ -70,14 +76,16 @@ def getImageCaptionFromFilename(source_filename):
     ''
     >>> getImageCaptionFromFilename('02-not-really-valid-but-deal-with-it.jpg')
     'not-really-valid-but-deal-with-it'
-    '''
+    """
     p = Path(source_filename)
     caption = p.stem
     for i in range(len(caption)):
         if caption[i].isalpha():
             return caption[i:]
-    return ''
+    return ""
+
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()
