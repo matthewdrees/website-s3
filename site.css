@@ -24,26 +24,9 @@ table,
 header,
 footer,
 nav,
-section,
-figure {
+section {
     margin: 0;
     padding: 0;
-}
-
-figure {
-    display: block;
-}
-
-html {
-    /*overflow-y: scroll;*/
-}
-
-a {
-    color: #3169B3;
-}
-
-a:hover {
-    color: #C00;
 }
 
 * {
@@ -179,37 +162,6 @@ h1 {
     padding: 30px 0;
 }
 
-.navigation a {
-    text-decoration: none;
-    border-bottom: 1px solid #92ABCD;
-}
-
-a.twitter-nav-link {
-    border: 0;
-    margin: 0 0.2em;
-}
-
-.twitter-nav-link span {
-    border-bottom: 1px solid #92ABCD;
-}
-
-.navigation a:hover,
-.twitter-nav-link:hover span {
-    border-bottom-color: #C00;
-}
-
-.twitter-nav-link:before {
-    content: '';
-    background: url('../test/twitter.svg');
-    display: inline-block;
-    width: 0.8em;
-    height: 0.8em;
-    background-size: 0.7em 0.7em;
-    background-repeat: no-repeat;
-    background-position: 0 0.1em;
-    margin-right: 0.1em;
-}
-
 h2 {
     font-size: 32px;
     line-height: 1.1;
@@ -324,12 +276,6 @@ img.img--with_border {
 
 .row--large {
     margin-bottom: 48px;
-}
-
-.section--head h1 a {
-    vertical-align: super;
-    font-size: 14px;
-    text-decoration: none;
 }
 
 .col-50 {
@@ -461,21 +407,6 @@ img.img--with_border {
     float: left;
 }
 
-.demo-gallery a {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    -webkit-touch-callout: none;
-    display: block;
-    float: left;
-    margin: 0 12px 12px 0;
-    width: 171px;
-    line-height: 0;
-}
-
-a.demo-gallery__img--main {
-    width: auto;
-    height: auto;
-}
-
 .ukraine-flag {
     width: 21px;
     height: 14px;
@@ -517,36 +448,6 @@ a.demo-gallery__img--main {
     text-align: center;
     position: relative;
     margin: 0 0 24px;
-}
-
-.share-buttons a {
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    display: inline-block;
-    padding: 10px 20px;
-    margin: 10px;
-    color: #FFF;
-    text-decoration: none;
-    background: #5AAF63;
-    font-size: 16px;
-    line-height: 22px;
-    cursor: pointer;
-}
-
-.share-buttons a:hover {
-    opacity: 0.7;
-}
-
-#tweet {
-    background: #0096c4;
-}
-
-#like {
-    background: #3b5998;
-}
-
-#gplus {
-    background: #d34836;
 }
 
 @media screen and (max-width: 1000px) {
