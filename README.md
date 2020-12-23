@@ -37,7 +37,7 @@ I use iMovie to create a 1280x720 mp4 movie. I name the movie the same as the fo
 
 Use the createajson.py script in the running docker instance to create a skeleton a.json file for text content and information to create web page artifacts.
 
-    # python createajson content/2020/new
+    # python createajson.py content/2020/new
 
 Edit the newly created a.json file for captioning images, date of post, blurb, etc.
 
@@ -53,5 +53,13 @@ Edit the newly created a.json file for captioning images, date of post, blurb, e
     # python genfolderindex.py --inputpath content/2020/new --outputpath out/2020/new
     # python genindex.py --input content --output out
 
+## Install aws cli (first time setup only)
+
+    // Todo: put in container.
+    - Install aws cli.
+    - Configure access: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html
+
 ## Sync with amazon s3:
-    # python syncs3.py
+
+    # cd out
+    # aws s3 sync . s3://your.s3.uri --acl public-read --storage-class REDUCED_REDUNDANCY --exclude "*.DS_Store" --delete
