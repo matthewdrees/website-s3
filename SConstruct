@@ -132,6 +132,19 @@ def get_images_html(image_files):
     return "\n".join(html)
 
 
+def get_movie_html(has_mp4, moviename):
+    if has_mp4:
+        return """<div class="row row--video">
+                <video controls>
+                    <source src="$moviename" type="video/mp4">
+                    I'm sorry; your browser doesn't support MP4 video with H.264.
+                </video>
+            </div>""".replace(
+            "$moviename", moviename
+        )
+    return ""
+
+
 def write_post_index_html(target, source, env):
     """Build command for post index.html.
 
@@ -146,6 +159,7 @@ def write_post_index_html(target, source, env):
     """
     d = {}  # template substitute dictionary
     image_files = []  # list of images in 'source' list
+    has_mp4 = any(".mp4" in str(s) for s in source)
     for s in source:
         filename = str(s)
         if isimage(filename):
@@ -157,7 +171,7 @@ def write_post_index_html(target, source, env):
             p = Path(filename)
             postInfo = PostInfo(p.parts[-2])
             d["title"] = postInfo.name
-            d["moviename"] = postInfo.moviename
+            d["moviehtml"] = get_movie_html(has_mp4, postInfo.moviename)
     d["images"] = get_images_html(image_files)
 
     # Write post index.html with substitutions from a template.
@@ -232,7 +246,9 @@ def do_site_css():
 
 
 # List of post folder names (skip lame hidden folders)
-post_folder_names = sorted([f for f in os.listdir(postsDir) if not f.startswith(".")])
+post_folder_names = sorted(
+    [f for f in os.listdir(postsDir) if not f.startswith(".")], reverse=True
+)
 
 # Process individual posts.
 for post_folder_name in post_folder_names:
