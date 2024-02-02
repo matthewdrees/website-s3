@@ -1,5 +1,8 @@
 # website-s3
-Creating and publishing family website for pictures and movies.
+
+Creating and publishing family website with pictures and movies using Amazon S3.
+
+I'M NO LONGER USING OR MAINTAINING THIS REPOSIORY. But I'm leaving it as a reference for now.
 
 ## How to run with the compiler/setup from the docker container.
 
